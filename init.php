@@ -25,8 +25,6 @@ final class Menu_Items_Visibility_Control {
         $this->plugin_url = plugins_url( "/", __FILE__ );
         $this->slug = basename( $this->plugin_path );
 
-        self::register_eval_safe_tokens();
-
         if ( ! is_admin() ) {
             add_filter( 'wp_get_nav_menu_items', [ __CLASS__, 'visibility_check' ], 10, 3 );
             return;
@@ -205,29 +203,6 @@ final class Menu_Items_Visibility_Control {
         }
 
         return true;
-
-    }
-
-
-
-    /**
-     * Register eval() safe tokens.
-     *
-     * @return void
-     * @since 2021.07.21
-     */
-    public static function register_eval_safe_tokens(): void {
-
-        $cxl_eval_safe_tokens = [
-            'count',
-            'empty',
-            'is_page',
-            'get_current_user_id',
-            'wc_memberships_get_user_active_memberships',
-            'wc_memberships_is_user_active_member',
-        ];
-
-        update_option( 'cxl_eval_safe_tokens', $cxl_eval_safe_tokens );
 
     }
 
