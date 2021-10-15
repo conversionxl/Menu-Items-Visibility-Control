@@ -106,16 +106,18 @@ final class Menu_Items_Visibility_Control {
 
             $item_parent = get_post_meta( $item->ID, '_menu_item_menu_item_parent', true );
             $visible     = true;
-            $logic       = get_post_meta( $item->ID, '_menu_item_visibility', true );
+            $logic       = [ get_post_meta( $item->ID, '_menu_item_visibility', true ) ];
 
-            if ( $logic ) {
+            if ( self::eval_security_check( $logic ) ) {
 
                 set_error_handler( 'self::error_handler' );
 
-                try {
-                    eval( '$visible = ' . $logic . ';' );
-                } catch ( Error $e ) {
-                    trigger_error( $e->getMessage(), E_USER_WARNING );
+                foreach ( $logic as $logic_item ) {
+                    try {
+                        eval( '$visible = ' . $logic_item . ';' );
+                    } catch ( Error $e ) {
+                        trigger_error( $e->getMessage(), E_USER_WARNING );
+                    }
                 }
 
                 restore_error_handler();
